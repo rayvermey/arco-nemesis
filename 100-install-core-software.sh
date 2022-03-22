@@ -58,6 +58,34 @@ if grep -q "Arch Linux" /etc/os-release; then
   fi
 fi
 
+# when on Carli - remove conflicting files 
+
+if grep -q "carli" /etc/os-release; then
+
+  echo
+  tput setaf 2
+  echo "################################################################"
+  echo "################### Removing software from Carli"
+  echo "################################################################"
+  tput sgr0
+  echo
+  sudo pacman -R --noconfirm carli-xfce-config
+  sudo pacman -R --noconfirm grml-zsh-config
+  sudo pacman -R --noconfirm carli-neofetch
+  sudo rm -f /etc/pacman.d/hooks/lsb-release.hook
+  sudo pacman -R --noconfirm lsb-release
+fi
+
+# here we assume we are on anything Arch Linux based - ArcoLinux as a rule
+
+echo
+tput setaf 2
+echo "################################################################"
+echo "################### Installing software for anything Arch based"
+echo "################################################################"
+tput sgr0
+echo
+
 sudo pacman -S --noconfirm --needed aic94xx-firmware
 sudo pacman -S --noconfirm --needed arc-gtk-theme
 sudo pacman -S --noconfirm --needed arc-darkest-theme-git
@@ -98,8 +126,17 @@ sudo pacman -S --noconfirm --needed wps-office-mime
 #nemesis-repo added to /etc/pacman.conf
 
 if grep -q nemesis_repo /etc/pacman.conf; then
-  echo "nemesis_repo is already in /etc/pacman.conf"
+
+  echo
+  tput setaf 2
+  echo "################################################################"
+  echo "################### nemesis_repo is already in /etc/pacman.conf"
+  echo "################################################################"
+  tput sgr0
+  echo  
+
 else
+
 echo '
 
 [nemesis_repo]
@@ -108,6 +145,14 @@ Server = https://erikdubois.github.io/$repo/$arch' | sudo tee -a /etc/pacman.con
 fi
 
 sudo pacman -Sy
+
+echo
+tput setaf 2
+echo "################################################################"
+echo "################### Installing software from nemesis_repo"
+echo "################################################################"
+tput sgr0
+echo  
 
 sudo pacman -S --noconfirm --needed edu-candy-beauty-arc-git
 sudo pacman -S --noconfirm --needed edu-candy-beauty-arc-mint-grey-git
@@ -133,7 +178,7 @@ if [ -f /usr/share/xsessions/leftwm.desktop ]; then
 
 
   sh ~/.config/leftwm/scripts/install-all-arcolinux-themes.sh
-  sh ~/.config/leftwm/scripts/install-all-arcolinux-themes-peter.sh
+  sh ~/.config/leftwm/scripts/install-all-arcolinux-community-themes.sh
 fi
 
 ###############################################################################################
@@ -155,15 +200,6 @@ if [ -f /usr/bin/startplasma-x11 ]; then
 fi
 
 ###############################################################################################
-
-# when on Carli - remove conflicting files 
-
-if grep -q "carli" /etc/os-release; then
-  sudo pacman -R --noconfirm carli-xfce-config
-  sudo pacman -R --noconfirm grml-zsh-config
-  sudo rm -f /etc/pacman.d/hooks/lsb-release.hook
-  sudo pacman -R --noconfirm lsb-release
-fi
 
 
 # when on Arch Linux
@@ -320,7 +356,7 @@ if grep -q "Arch Linux" /etc/os-release; then
   if [ -f /usr/bin/leftwm ]; then
 
     sh ~/.config/leftwm/scripts/install-all-arcolinux-themes.sh
-    sh ~/.config/leftwm/scripts/install-all-arcolinux-themes-peter.sh
+    sh ~/.config/leftwm/scripts/install-all-arcolinux-community-themes.sh
 
   fi
 
