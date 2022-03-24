@@ -122,7 +122,7 @@ fi
 
 if grep -q "carli" /etc/os-release; then
 	echo
-	echo "Changing sddm menu"
+	echo "Changing sddm theme"
 	echo
 	sudo pacman -S --noconfirm --needed arcolinux-sddm-simplicity-git
 	FIND="Current=breeze"
