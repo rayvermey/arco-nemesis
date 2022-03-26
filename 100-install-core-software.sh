@@ -2,8 +2,8 @@
 #set -e
 ##################################################################################################################
 # Author 	: Erik Dubois
-# Website   : https://www.erikdubois.be
-# Website   : https://www.alci.online
+# Website : https://www.erikdubois.be
+# Website : https://www.alci.online
 # Website	: https://www.arcolinux.info
 # Website	: https://www.arcolinux.com
 # Website	: https://www.arcolinuxd.com
@@ -26,6 +26,10 @@
 #tput setaf 8 = light blue
 ##################################################################################################################
 
+sudo pacman -S --noconfirm --needed wget
+sudo pacman -S --noconfirm --needed curl
+sudo pacman -S --noconfirm --needed git
+
 echo
 tput setaf 2
 echo "################################################################"
@@ -34,33 +38,31 @@ echo "################################################################"
 tput sgr0
 echo
 
-if grep -q "Arch Linux" /etc/os-release; then
-  if grep -q arcolinux_repo /etc/pacman.conf; then
+if grep -q arcolinux_repo /etc/pacman.conf; then
 
-    echo
-    tput setaf 2
-    echo "################################################################"
-    echo "################ ArcoLinux repos are already in /etc/pacman.conf"
-    echo "################################################################"
-    tput sgr0
-    echo
-    else
-    #get the keys and mirrors for ArcoLinux
-    echo
-    tput setaf 2
-    echo "################################################################"
-    echo "################### Getting the keys and mirrors for ArcoLinux"
-    echo "################################################################"
-    tput sgr0
-    echo
-    sh arch/get-the-keys-and-repos.sh
-    sudo pacman -Sy
-  fi
+  echo
+  tput setaf 2
+  echo "################################################################"
+  echo "################ ArcoLinux repos are already in /etc/pacman.conf"
+  echo "################################################################"
+  tput sgr0
+  echo
+  else
+  #get the keys and mirrors for ArcoLinux
+  echo
+  tput setaf 2
+  echo "################################################################"
+  echo "################### Getting the keys and mirrors for ArcoLinux"
+  echo "################################################################"
+  tput sgr0
+  echo
+  sh arch/get-the-keys-and-repos.sh
+  sudo pacman -Sy
 fi
 
 # when on Carli - remove conflicting files 
 
-if grep -q "carli" /etc/os-release; then
+if [ -f /usr/local/bin/get-nemesis-on-carli ]; then
 
   echo
   tput setaf 2
@@ -71,9 +73,21 @@ if grep -q "carli" /etc/os-release; then
   echo
   sudo pacman -R --noconfirm carli-xfce-config
   sudo pacman -R --noconfirm grml-zsh-config
-  sudo pacman -R --noconfirm carli-neofetch
-  sudo rm -f /etc/pacman.d/hooks/lsb-release.hook
-  sudo pacman -R --noconfirm lsb-release
+fi
+
+# when on AA - remove conflicting files 
+
+if [ -f /usr/local/bin/get-nemesis-on-alci ]; then
+
+  echo
+  tput setaf 2
+  echo "################################################################"
+  echo "################### Removing software from AA"
+  echo "################################################################"
+  tput sgr0
+  echo
+  sudo rm /etc/skel/.Xresources
+  sudo pacman -R --noconfirm grml-zsh-config
 fi
 
 # here we assume we are on anything Arch Linux based - ArcoLinux as a rule
@@ -98,6 +112,7 @@ sudo pacman -S --noconfirm --needed chromium
 sudo pacman -S --noconfirm --needed cpuid
 sudo pacman -S --noconfirm --needed discord
 sudo pacman -S --noconfirm --needed file-roller
+sudo pacman -S --noconfirm --needed firefox
 sudo pacman -S --noconfirm --needed flameshot-git
 sudo pacman -S --noconfirm --needed gitahead-bin
 sudo pacman -S --noconfirm --needed insync
@@ -111,15 +126,15 @@ sudo pacman -S --noconfirm --needed sublime-text-4
 sudo pacman -S --noconfirm --needed surfn-icons-git
 sudo pacman -S --noconfirm --needed telegram-desktop
 sudo pacman -S --noconfirm --needed the_platinum_searcher-bin
-sudo pacman -S --noconfirm --needed ttf-wps-fonts
+#sudo pacman -S --noconfirm --needed ttf-wps-fonts
 sudo pacman -S --noconfirm --needed upd72020x-fw
 sudo pacman -S --noconfirm --needed vivaldi
 sudo pacman -S --noconfirm --needed vivaldi-ffmpeg-codecs
 sudo pacman -S --noconfirm --needed vivaldi-widevine
 sudo pacman -S --noconfirm --needed vlc
 sudo pacman -S --noconfirm --needed wd719x-firmware
-sudo pacman -S --noconfirm --needed wps-office
-sudo pacman -S --noconfirm --needed wps-office-mime
+#sudo pacman -S --noconfirm --needed wps-office
+#sudo pacman -S --noconfirm --needed wps-office-mime
 
 ###############################################################################################
 
@@ -179,6 +194,9 @@ if [ -f /usr/share/xsessions/leftwm.desktop ]; then
 
   sh ~/.config/leftwm/scripts/install-all-arcolinux-themes.sh
   sh ~/.config/leftwm/scripts/install-all-arcolinux-community-themes.sh
+  
+  leftwm-theme update
+  leftwm-theme apply db-nemesis
 fi
 
 ###############################################################################################
@@ -218,7 +236,8 @@ if grep -q "Arch Linux" /etc/os-release; then
   sudo pacman -S --noconfirm --needed arcolinux-logout-git
   sudo pacman -S --noconfirm --needed arcolinux-paru-git
   sudo pacman -S --noconfirm --needed arcolinux-root-git
-  sudo pacman -S --noconfirm --needed arcolinux-system-config-git
+  #sudo pacman -S --noconfirm --needed arcolinux-system-config-git
+  sudo pacman -S --noconfirm --needed arcolinux-system-config-dev-git  
   #sudo pacman -S --noconfirm --needed lsb-release
   sudo pacman -S --noconfirm --needed arcolinux-tweak-tool-git
   sudo pacman -S --noconfirm --needed arcolinux-variety-git
@@ -348,15 +367,6 @@ if grep -q "Arch Linux" /etc/os-release; then
     sudo pacman -S --noconfirm --needed iso-flag-png
     sudo pacman -S --noconfirm --needed mintlocale
     sudo pacman -S --noconfirm --needed nemo-fileroller
-
-  fi
-
-  # when on Leftwm
-
-  if [ -f /usr/bin/leftwm ]; then
-
-    sh ~/.config/leftwm/scripts/install-all-arcolinux-themes.sh
-    sh ~/.config/leftwm/scripts/install-all-arcolinux-community-themes.sh
 
   fi
 
