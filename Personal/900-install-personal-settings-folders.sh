@@ -2,7 +2,8 @@
 #set -e
 ##################################################################################################################
 # Author 	: Erik Dubois
-# Website   : https://www.erikdubois.be
+# Website : https://www.erikdubois.be
+# Website : https://www.alci.online
 # Website	: https://www.arcolinux.info
 # Website	: https://www.arcolinux.com
 # Website	: https://www.arcolinuxd.com
@@ -14,6 +15,18 @@
 #   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
 #
 ##################################################################################################################
+#tput setaf 0 = black 
+#tput setaf 1 = red 
+#tput setaf 2 = green
+#tput setaf 3 = yellow 
+#tput setaf 4 = dark blue 
+#tput setaf 5 = purple
+#tput setaf 6 = cyan 
+#tput setaf 7 = gray 
+#tput setaf 8 = light blue
+##################################################################################################################
+
+installed_dir=$(dirname $(readlink -f $(basename `pwd`)))
 
 echo
 tput setaf 2
@@ -38,7 +51,6 @@ echo
 echo
 echo "Installing all shell files"
 echo
-installed_dir=$(dirname $(readlink -f $(basename `pwd`)))
 cp $installed_dir/settings/shell-personal/.bashrc-personal ~
 cp $installed_dir/settings/shell-personal/.zshrc ~
 cp $installed_dir/settings/shell-personal/.zshrc-personal ~
@@ -62,72 +74,35 @@ echo
 [ -d $HOME"/.config/Thunar" ] || mkdir -p $HOME"/.config/Thunar"
 cp  settings/thunar/uca.xml $HOME/.config/Thunar
 echo
-echo "Copy paste virtual box template"
-echo
-[ -d $HOME"/VirtualBox VMs" ] || mkdir -p $HOME"/VirtualBox VMs"
-sudo cp -rf settings/virtualbox-template/* ~/VirtualBox\ VMs/
-cd ~/VirtualBox\ VMs/
-tar -xzf template.tar.gz
-rm -f template.tar.gz
 
-if [ -f /etc/lightdm/lightdm-gtk-greeter.conf ]; then
+result=$(systemd-detect-virt)
+
+if [ $result = "none" ];then
 
 	echo
-	echo "Changing the look of lightdm gtk greeter"
+	tput setaf 2
+	echo "################################################################"
+	echo "####### Copy paste virtual box template"
+	echo "################################################################"
+	tput sgr0
+	echo	
+
+	[ -d $HOME"/VirtualBox VMs" ] || mkdir -p $HOME"/VirtualBox VMs"
+	sudo cp -rf settings/virtualbox-template/* ~/VirtualBox\ VMs/
+	cd ~/VirtualBox\ VMs/
+	tar -xzf template.tar.gz
+	rm -f template.tar.gz	
+
+else
+
+	echo
+	tput setaf 2
+	echo "################################################################"
+	echo "### You are on a virtual machine - skipping VirtualBox"
+	echo "################################################################"
+	tput sgr0
 	echo
 
-	FIND="#theme-name="
-	REPLACE="theme-name=Arc-Dark"
-	sudo sed -i "s/$FIND/$REPLACE/g" /etc/lightdm/lightdm-gtk-greeter.conf
-
-	sudo cp $installed_dir/settings/wallpaper/lightdm.jpg /etc/lightdm/lightdm.jpg
-
-	FIND="#background="
-	REPLACE="background=\/etc\/lightdm\/lightdm.jpg"
-	sudo sed -i "s/$FIND/$REPLACE/g" /etc/lightdm/lightdm-gtk-greeter.conf
-
-fi
-
-if [ -f /usr/share/xsessions/xfce.desktop ]; then
-	if grep -q "Arch Linux" /etc/os-release; then
-		echo
-		echo "Changing the whiskermenu"
-		echo		
-		cp $installed_dir/settings/archlinux/whiskermenu-7.rc ~/.config/xfce4/panel/whiskermenu-7.rc
-	fi
-
-	if grep -q "carli" /etc/os-release; then
-		echo
-		echo "Changing the whiskermenu"
-		echo
-		cp $installed_dir/settings/carli/whiskermenu-7.rc ~/.config/xfce4/panel/whiskermenu-7.rc
-	fi
-
-	if grep -q "AA" /etc/dev-rel; then
-	echo
-	echo "Changing the whiskermenu"
-	echo
-	cp $installed_dir/settings/aa/whiskermenu-7.rc ~/.config/xfce4/panel/whiskermenu-7.rc
-	fi
-
-	FIND="Arc-Dark"
-	REPLACE="Arc-Dawn-Dark"
-	sudo sed -i "s/$FIND/$REPLACE/g" ~/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml	
-
-	FIND="Sardi-Arc"
-	REPLACE="Edu-Papirus-Dark-Tela"
-	sudo sed -i "s/$FIND/$REPLACE/g" ~/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml	
-
-fi
-
-if grep -q "carli" /etc/os-release; then
-	echo
-	echo "Changing sddm theme"
-	echo
-	sudo pacman -S --noconfirm --needed arcolinux-sddm-simplicity-git
-	FIND="Current=breeze"
-	REPLACE="Current=arcolinux-simplicity"
-	sudo sed -i "s/$FIND/$REPLACE/g" /etc/sddm.conf
 fi
 
 echo
