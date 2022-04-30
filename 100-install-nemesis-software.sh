@@ -27,57 +27,50 @@
 #tput setaf 8 = light blue
 ##################################################################################################################
 
-# software from AUR (Arch User Repositories)
-# https://aur.archlinux.org/packages/
+#nemesis-repo added to /etc/pacman.conf
 
-installed_dir=$(dirname $(readlink -f $(basename `pwd`)))
+if grep -q nemesis_repo /etc/pacman.conf; then
 
-echo
-tput setaf 2
-echo "################################################################"
-echo "################### AUR Folder - Software to install"
-echo "################################################################"
-tput sgr0
-echo
-
-result=$(systemd-detect-virt)
-
-if [ $result = "none" ];then
-
-	echo
-	tput setaf 2
-	echo "################################################################"
-	echo "####### Installing VirtualBox"
-	echo "################################################################"
-	tput sgr0
-	echo	
-
-	sh AUR/install-virtualbox-for-linux-v2.sh	
+  echo
+  tput setaf 2
+  echo "################################################################"
+  echo "################### nemesis_repo is already in /etc/pacman.conf"
+  echo "################################################################"
+  tput sgr0
+  echo
 
 else
 
+  tput setaf 2
+  echo "################################################################"
+  echo "################### nemesis_repo added to /etc/pacman.conf"
+  echo "################################################################"
+  tput sgr0
 
-	echo
-	tput setaf 2
-	echo "################################################################"
-	echo "### You are on a virtual machine - skipping VirtualBox"
-	echo "################################################################"
-	tput sgr0
-	echo
+echo '
 
+[nemesis_repo]
+SigLevel = Optional TrustedOnly
+Server = https://erikdubois.github.io/$repo/$arch' | sudo tee -a /etc/pacman.conf
 fi
 
-# these come last always
-echo "Checking if icons from applications have a hardcoded path"
-echo "and fixing them"
-echo "Wait for it ..."
-
-sudo hardcode-fixer
+sudo pacman -Sy
 
 echo
 tput setaf 2
 echo "################################################################"
-echo "################### AUR Software installed"
+echo "################### Installing software from nemesis_repo"
 echo "################################################################"
 tput sgr0
 echo
+
+sudo pacman -S --noconfirm --needed edu-candy-beauty-arc-git
+sudo pacman -S --noconfirm --needed edu-candy-beauty-arc-mint-grey-git
+sudo pacman -S --noconfirm --needed edu-candy-beauty-arc-mint-red-git
+sudo pacman -S --noconfirm --needed edu-candy-beauty-tela-git
+sudo pacman -S --noconfirm --needed edu-papirus-dark-tela-git
+sudo pacman -S --noconfirm --needed edu-papirus-dark-tela-grey-git
+
+#sudo pacman -S --noconfirm --needed edu-vimix-dark-tela-git
+
+# edu-skel-git and edu-system-git are defined in the personal files

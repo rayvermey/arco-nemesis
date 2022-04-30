@@ -1,28 +1,29 @@
 #!/bin/bash
 #set -e
 ##################################################################################################################
-# Author 	: Erik Dubois
+# Author    : Erik Dubois
 # Website   : https://www.erikdubois.be
 # Website   : https://www.alci.online
-# Website	: https://www.arcolinux.info
-# Website	: https://www.arcolinux.com
-# Website	: https://www.arcolinuxd.com
-# Website	: https://www.arcolinuxb.com
-# Website	: https://www.arcolinuxiso.com
-# Website	: https://www.arcolinuxforum.com
+# Website   : https://www.ariser.eu
+# Website   : https://www.arcolinux.info
+# Website   : https://www.arcolinux.com
+# Website   : https://www.arcolinuxd.com
+# Website   : https://www.arcolinuxb.com
+# Website   : https://www.arcolinuxiso.com
+# Website   : https://www.arcolinuxforum.com
 ##################################################################################################################
 #
 #   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
 #
 ##################################################################################################################
-#tput setaf 0 = black 
-#tput setaf 1 = red 
+#tput setaf 0 = black
+#tput setaf 1 = red
 #tput setaf 2 = green
-#tput setaf 3 = yellow 
-#tput setaf 4 = dark blue 
+#tput setaf 3 = yellow
+#tput setaf 4 = dark blue
 #tput setaf 5 = purple
-#tput setaf 6 = cyan 
-#tput setaf 7 = gray 
+#tput setaf 6 = cyan
+#tput setaf 7 = gray
 #tput setaf 8 = light blue
 ##################################################################################################################
 
@@ -34,9 +35,15 @@ echo "################################################################"
 tput sgr0
 echo
 
+sudo pacman -Sy
+
 sh 400-remove-software*
 
-sh 100-install-core-software*
+sh 100-install-nemesis-software*
+sh 110-install-arcolinux-software*
+sh 120-install-core-software*
+#sh 130-install-leftwm*
+
 sh 200-software-AUR-repo*
 #sh 300-sardi-extra-icons-AUR-repo*
 #sh 310-sardi-mint-y-icons-AUR-repo*
@@ -48,7 +55,7 @@ echo "################################################################"
 echo "################### Going to the Personal folder"
 echo "################################################################"
 tput sgr0
-echo 
+echo
 
 installed_dir=$(dirname $(readlink -f $(basename `pwd`)))
 cd $installed_dir/Personal
@@ -68,10 +75,13 @@ sh 940-btrfs-setup*
 #sh 955-install-settings-autoconnect-to-bluetooth-headset*
 sh 960-ckb-next*
 sh 970-alci*
-sh 970-aa*
+sh 970-ariser*
 sh 970-arch*
 sh 970-carli*
 sh 970-arco*
+sh 980-eos*
+sh 980-garuda*
+sh 999-skel*
 
 tput setaf 3
 echo "################################################################"

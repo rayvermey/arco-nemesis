@@ -1,16 +1,15 @@
 #!/bin/bash
 #set -e
 ##################################################################################################################
-# Author    : Erik Dubois
+# Author 	: Erik Dubois
 # Website   : https://www.erikdubois.be
 # Website   : https://www.alci.online
-# Website   : https://www.ariser.eu
-# Website   : https://www.arcolinux.info
-# Website   : https://www.arcolinux.com
-# Website   : https://www.arcolinuxd.com
-# Website   : https://www.arcolinuxb.com
-# Website   : https://www.arcolinuxiso.com
-# Website   : https://www.arcolinuxforum.com
+# Website	: https://www.arcolinux.info
+# Website	: https://www.arcolinux.com
+# Website	: https://www.arcolinuxd.com
+# Website	: https://www.arcolinuxb.com
+# Website	: https://www.arcolinuxiso.com
+# Website	: https://www.arcolinuxforum.com
 ##################################################################################################################
 #
 #   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
@@ -27,25 +26,26 @@
 #tput setaf 8 = light blue
 ##################################################################################################################
 
-# software from AUR (Arch User Repositories)
-# https://aur.archlinux.org/packages/
+# when on EOS
 
-echo
+###############################################################################
+#
+#   DECLARATION OF FUNCTIONS
+#
+###############################################################################
+
+tput setaf 6
+echo "################################################################"
+echo "FINAL SKEL"
+echo "Copying all files and folders from /etc/skel to ~"
+echo "################################################################"
+echo;tput sgr0
+sudo pacman -S archlinux-appstream-data --noconfirm
+cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H.%M.%S)
+cp -arf /etc/skel/. ~
+
 tput setaf 2
 echo "################################################################"
-echo "################### Sardi extra icons MINT to be installed"
+echo "ALL DONE!!!!!!!!!!!!!!!"
 echo "################################################################"
-tput sgr0
-echo
-
-installed_dir=$(dirname $(readlink -f $(basename `pwd`)))
-
-sh $installed_dir/AUR/install-sardi-mint-y-icons-v*.sh
-
-echo
-tput setaf 2
-echo "################################################################"
-echo "################### Sardi extra icons MINT installed"
-echo "################################################################"
-tput sgr0
-echo
+echo;tput sgr0
